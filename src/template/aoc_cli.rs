@@ -35,25 +35,8 @@ pub fn check() -> Result<(), AocCommandError> {
     Ok(())
 }
 
-pub fn read(day: Day) -> Result<Output, AocCommandError> {
-    let puzzle_path = get_puzzle_path(day);
-
-    let args = build_args(
-        "read",
-        &[
-            "--description-only".into(),
-            "--puzzle-file".into(),
-            puzzle_path,
-        ],
-        day,
-    );
-
-    call_aoc_cli(&args)
-}
-
 pub fn download(day: Day) -> Result<Output, AocCommandError> {
     let input_path = get_input_path(day);
-    let puzzle_path = get_puzzle_path(day);
 
     let args = build_args(
         "download",
@@ -61,8 +44,6 @@ pub fn download(day: Day) -> Result<Output, AocCommandError> {
             "--overwrite".into(),
             "--input-file".into(),
             input_path.to_string(),
-            "--puzzle-file".into(),
-            puzzle_path.to_string(),
         ],
         day,
     );
@@ -70,7 +51,6 @@ pub fn download(day: Day) -> Result<Output, AocCommandError> {
     let output = call_aoc_cli(&args)?;
     println!("---");
     println!("🎄 Successfully wrote input to \"{}\".", &input_path);
-    println!("🎄 Successfully wrote puzzle to \"{}\".", &puzzle_path);
     Ok(output)
 }
 
@@ -84,10 +64,6 @@ pub fn submit(day: Day, part: u8, result: &str) -> Result<Output, AocCommandErro
 
 fn get_input_path(day: Day) -> String {
     format!("data/inputs/{day}.txt")
-}
-
-fn get_puzzle_path(day: Day) -> String {
-    format!("data/puzzles/{day}.md")
 }
 
 fn get_year() -> Option<u16> {
