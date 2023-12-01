@@ -1,20 +1,23 @@
 use itertools::Itertools;
+use rayon::prelude::*;
 
 advent_of_code::solution!(1);
 
-pub fn part_one(input: &str) -> Option<u32> {
+pub fn part_one(input: &str) -> Option<usize> {
     input
         .trim()
-        .split("\n")
+        .lines()
         .map(|calibration| {
             let chars = calibration
                 .chars()
                 .filter(|c| c.is_numeric())
                 .collect::<Vec<_>>();
-            let value = format!("{}{}", chars[0], chars[chars.len() - 1]);
-            value.parse::<u32>().expect(calibration)
+
+            format!("{}{}", chars[0], chars[chars.len() - 1])
+                .parse::<usize>()
+                .expect(calibration)
         })
-        .sum::<u32>()
+        .sum::<usize>()
         .into()
 }
 
@@ -38,10 +41,10 @@ const PATTERNS: [(&str, &str); 18] = [
     ("8", "8"),
     ("9", "9"),
 ];
-pub fn part_two(input: &str) -> Option<u32> {
+pub fn part_two(input: &str) -> Option<usize> {
     input
         .trim()
-        .split("\n")
+        .par_lines()
         .map(|c| {
             let indices = PATTERNS
                 .iter()
@@ -54,10 +57,10 @@ pub fn part_two(input: &str) -> Option<u32> {
                 .collect::<Vec<_>>();
 
             format!("{}{}", indices[0].1, indices[indices.len() - 1].1)
-                .parse::<u32>()
+                .parse::<usize>()
                 .expect(c)
         })
-        .sum::<u32>()
+        .sum::<usize>()
         .into()
 }
 
