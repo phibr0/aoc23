@@ -6,7 +6,8 @@ use std::{
 
 use crate::Day;
 
-const MODULE_TEMPLATE: &str = r#"advent_of_code::solution!(DAY_NUMBER);
+const MODULE_TEMPLATE: &str = r#"use rayon::prelude::*;
+advent_of_code::solution!(DAY_NUMBER);
 
 pub fn part_one(input: &str) -> Option<u32> {
     None
