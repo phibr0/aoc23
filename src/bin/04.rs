@@ -75,8 +75,7 @@ impl FromStr for Card {
 
 pub fn part_one(input: &str) -> Option<u32> {
     input
-        .lines()
-        .par_bridge()
+        .par_lines()
         .map(Card::from_str)
         .map(Result::unwrap)
         .map(|card| card.compute_score())
@@ -86,13 +85,12 @@ pub fn part_one(input: &str) -> Option<u32> {
 
 pub fn part_two(input: &str) -> Option<u32> {
     let cards = input
-        .lines()
+        .par_lines()
         .map(Card::from_str)
         .map(Result::unwrap)
         .collect::<Vec<_>>();
     let mut queue = VecDeque::<&Card>::from(cards.iter().collect::<Vec<_>>());
     let mut card_count: u32 = cards.len() as u32;
-
     while queue.len() > 0 {
         let card = queue.pop_front().unwrap();
 
