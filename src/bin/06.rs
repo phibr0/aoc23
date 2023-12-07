@@ -63,10 +63,10 @@ pub fn part_two(input: &str) -> Option<u32> {
         .map(|line| {
             remove_whitespace(line.split(":").last().unwrap())
                 .parse::<u64>()
-                .unwrap()
+                .expect("Couldn't parse input")
         })
         .collect_tuple()
-        .unwrap();
+        .expect("Invalid input");
 
     let mut beats = 0;
     let mut mm_per_ms = 0;
