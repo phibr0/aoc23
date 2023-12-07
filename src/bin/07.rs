@@ -272,12 +272,6 @@ impl Card {
             'J' => 2,
             _ => b.to_digit(10).unwrap() + 1,
         };
-        println!(
-            "{} {} is Greater={}",
-            a,
-            b,
-            a_value.cmp(&b_value) == Ordering::Greater
-        );
         a_value.cmp(&b_value)
     }
 
@@ -346,15 +340,6 @@ pub fn part_two(input: &str) -> Option<u32> {
         .collect::<Vec<Card>>();
 
     cards.par_sort_by(Card::compare_two);
-
-    for (i, card) in cards.iter().enumerate() {
-        println!(
-            "{:?} is rank {} and {:?}",
-            card.cards,
-            i + 1,
-            card.card_type
-        );
-    }
 
     let mut reduced: u32 = 0;
     for (i, card) in cards.iter().enumerate() {
