@@ -4,7 +4,7 @@ use std::{cmp::Ordering, collections::HashMap};
 
 advent_of_code::solution!(7);
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, PartialOrd)]
 enum CardType {
     HighCard,
     OnePair,
@@ -13,54 +13,6 @@ enum CardType {
     FullHouse,
     FourOfAKind,
     FiveOfAKind,
-}
-
-impl PartialEq for CardType {
-    fn eq(&self, other: &Self) -> bool {
-        let self_value = match self {
-            CardType::HighCard => 0,
-            CardType::OnePair => 1,
-            CardType::TwoPairs => 2,
-            CardType::ThreeOfAKind => 3,
-            CardType::FullHouse => 4,
-            CardType::FourOfAKind => 5,
-            CardType::FiveOfAKind => 6,
-        };
-        let other_value = match other {
-            CardType::HighCard => 0,
-            CardType::OnePair => 1,
-            CardType::TwoPairs => 2,
-            CardType::ThreeOfAKind => 3,
-            CardType::FullHouse => 4,
-            CardType::FourOfAKind => 5,
-            CardType::FiveOfAKind => 6,
-        };
-        self_value == other_value
-    }
-}
-
-impl PartialOrd for CardType {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        let self_value = match self {
-            CardType::HighCard => 0,
-            CardType::OnePair => 1,
-            CardType::TwoPairs => 2,
-            CardType::ThreeOfAKind => 3,
-            CardType::FullHouse => 4,
-            CardType::FourOfAKind => 5,
-            CardType::FiveOfAKind => 6,
-        };
-        let other_value = match other {
-            CardType::HighCard => 0,
-            CardType::OnePair => 1,
-            CardType::TwoPairs => 2,
-            CardType::ThreeOfAKind => 3,
-            CardType::FullHouse => 4,
-            CardType::FourOfAKind => 5,
-            CardType::FiveOfAKind => 6,
-        };
-        self_value.partial_cmp(&other_value)
-    }
 }
 
 #[derive(Debug)]
@@ -229,7 +181,7 @@ impl Card {
         Self::new_two(card.chars().collect(), bid.parse().unwrap())
     }
 
-    fn compare_char(a: &char, b: &char) -> Ordering {
+    fn compare_single_card(a: &char, b: &char) -> Ordering {
         if a == b {
             return Ordering::Equal;
         }
@@ -279,7 +231,7 @@ impl Card {
         if self.card_type != other.card_type {
             return self.card_type.partial_cmp(&other.card_type).unwrap();
         } else {
-            return Card::compare_char(
+            return Card::compare_single_card(
                 self.cards
                     .iter()
                     .zip(other.cards.iter())
@@ -340,6 +292,16 @@ pub fn part_two(input: &str) -> Option<u32> {
         .collect::<Vec<Card>>();
 
     cards.par_sort_by(Card::compare_two);
+
+    for (i, card) in cards.iter().enumerate() {
+        println!(
+            "{:?} is type {:?} and rank {}, scoring {} points",
+            card.cards,
+            card.card_type,
+            i + 1,
+            card.bid * (i + 1) as u32
+        );
+    }
 
     let mut reduced: u32 = 0;
     for (i, card) in cards.iter().enumerate() {
