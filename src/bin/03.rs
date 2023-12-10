@@ -4,7 +4,7 @@ use regex::Regex;
 advent_of_code::solution!(3);
 
 fn find_gear_ratio(input: &str, position: usize) -> Option<(u32, u32)> {
-    let line_length = input.lines().nth(0).unwrap().len() + 1;
+    let line_length = input.lines().next().unwrap().len() + 1;
     let mut checks = vec![];
     let is_first_line = position < line_length;
     let is_last_line = position > input.len() - line_length;
@@ -58,7 +58,7 @@ fn find_gear_ratio(input: &str, position: usize) -> Option<(u32, u32)> {
 }
 
 fn is_valid_part_number(input: &str, start: usize, end: usize) -> bool {
-    let line_length = input.lines().nth(0).unwrap().len() + 1;
+    let line_length = input.lines().next().unwrap().len() + 1;
     !(start..=end)
         .flat_map(|idx| {
             let mut checks = vec![];

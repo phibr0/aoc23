@@ -57,7 +57,7 @@ pub fn part_two(input: &str) -> Option<usize> {
     let (directions, count_instructions) = parse_directions(input);
     let nodes = parse_graph(input);
 
-    let current_nodes: Vec<&&str> = nodes.keys().filter(|key| key.ends_with("A")).collect();
+    let current_nodes: Vec<&&str> = nodes.keys().filter(|key| key.ends_with('A')).collect();
 
     let depths_to_z: Vec<usize> = current_nodes
         .par_iter()
@@ -65,10 +65,10 @@ pub fn part_two(input: &str) -> Option<usize> {
             let mut current_node = *node;
             let mut depth = 0;
 
-            while !current_node.ends_with("Z") {
+            while !current_node.ends_with('Z') {
                 let (left, right) = nodes.get(current_node).unwrap();
 
-                match directions.clone().nth(depth % count_instructions as usize) {
+                match directions.clone().nth(depth % count_instructions) {
                     Some('L') => current_node = left,
                     Some('R') => current_node = right,
                     _ => panic!("Invalid direction"),

@@ -19,7 +19,6 @@ pub fn part_one(input: &str) -> Option<usize> {
             .name("seeds")
             .unwrap()
             .as_str()
-            .trim()
             .split_whitespace()
             .map(|s| s.parse::<usize>().unwrap())
             .collect::<Vec<usize>>()
@@ -48,7 +47,7 @@ pub fn part_one(input: &str) -> Option<usize> {
             .collect::<Vec<_>>();
 
         values.iter().for_each(|(dest, src, len)| {
-            let mapping = mapping_table.entry(to).or_insert_with(Vec::new);
+            let mapping = mapping_table.entry(to).or_default();
             mapping.push(Almanac {
                 dest_start: *dest,
                 src_range: *src..(*src + len),
@@ -79,15 +78,13 @@ pub fn part_one(input: &str) -> Option<usize> {
                             None
                         }
                     })
-                    .or(Some(value))
-                    .unwrap();
+                    .unwrap_or(value);
 
                 step = next_step;
             }
             value
         })
         .min()
-        .into()
 }
 
 pub fn part_two(input: &str) -> Option<usize> {
@@ -99,7 +96,6 @@ pub fn part_two(input: &str) -> Option<usize> {
             .name("seeds")
             .unwrap()
             .as_str()
-            .trim()
             .split_whitespace()
             .map(|s| s.parse::<usize>().unwrap())
             .tuples::<(usize, usize)>()
@@ -130,7 +126,7 @@ pub fn part_two(input: &str) -> Option<usize> {
             .collect::<Vec<_>>();
 
         values.iter().for_each(|(dest, src, len)| {
-            let mapping = mapping_table.entry(to).or_insert_with(Vec::new);
+            let mapping = mapping_table.entry(to).or_default();
             mapping.push(Almanac {
                 dest_start: *dest,
                 src_range: *src..(*src + len),
@@ -165,8 +161,7 @@ pub fn part_two(input: &str) -> Option<usize> {
                                     None
                                 }
                             })
-                            .or(Some(value))
-                            .unwrap();
+                            .unwrap_or(value);
 
                         step = next_step;
                     }

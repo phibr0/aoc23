@@ -106,7 +106,6 @@ impl Card {
         } else if Card::is_two_pairs(cards) {
             return CardType::TwoPairs;
         } else if {
-            let cards: &Vec<char> = &cards;
             let mut counts = HashMap::new();
             let mut joker_count = 0;
             for card in cards {
@@ -127,20 +126,20 @@ impl Card {
     }
 
     fn compute_card_type(cards: &Vec<char>) -> CardType {
-        if Card::is_multiple_of_type(&cards, 5) {
-            return CardType::FiveOfAKind;
-        } else if Card::is_multiple_of_type(&cards, 4) {
-            return CardType::FourOfAKind;
-        } else if Card::is_full_house(&cards) {
-            return CardType::FullHouse;
-        } else if Card::is_multiple_of_type(&cards, 3) {
-            return CardType::ThreeOfAKind;
-        } else if Card::is_two_pairs(&cards) {
-            return CardType::TwoPairs;
-        } else if Card::is_multiple_of_type(&cards, 2) {
-            return CardType::OnePair;
+        if Card::is_multiple_of_type(cards, 5) {
+            CardType::FiveOfAKind
+        } else if Card::is_multiple_of_type(cards, 4) {
+            CardType::FourOfAKind
+        } else if Card::is_full_house(cards) {
+            CardType::FullHouse
+        } else if Card::is_multiple_of_type(cards, 3) {
+            CardType::ThreeOfAKind
+        } else if Card::is_two_pairs(cards) {
+            CardType::TwoPairs
+        } else if Card::is_multiple_of_type(cards, 2) {
+            CardType::OnePair
         } else {
-            return CardType::HighCard;
+            CardType::HighCard
         }
     }
 
@@ -229,7 +228,7 @@ impl Card {
 
     fn compare(&self, other: &Card) -> Ordering {
         if self.card_type != other.card_type {
-            return self.card_type.partial_cmp(&other.card_type).unwrap();
+            self.card_type.partial_cmp(&other.card_type).unwrap()
         } else {
             return Card::compare_single_card(
                 self.cards
@@ -250,7 +249,7 @@ impl Card {
 
     fn compare_two(&self, other: &Card) -> Ordering {
         if self.card_type != other.card_type {
-            return self.card_type.partial_cmp(&other.card_type).unwrap();
+            self.card_type.partial_cmp(&other.card_type).unwrap()
         } else {
             return Card::compare_char_two(
                 self.cards
@@ -271,10 +270,7 @@ impl Card {
 }
 
 pub fn part_one(input: &str) -> Option<u32> {
-    let mut cards = input
-        .par_lines()
-        .map(|line| Card::from_str(line))
-        .collect::<Vec<Card>>();
+    let mut cards = input.par_lines().map(Card::from_str).collect::<Vec<Card>>();
 
     cards.par_sort_by(Card::compare);
 
@@ -288,7 +284,7 @@ pub fn part_one(input: &str) -> Option<u32> {
 pub fn part_two(input: &str) -> Option<u32> {
     let mut cards = input
         .par_lines()
-        .map(|line| Card::from_str_two(line))
+        .map(Card::from_str_two)
         .collect::<Vec<Card>>();
 
     cards.par_sort_by(Card::compare_two);

@@ -51,7 +51,7 @@ pub fn part_two(input: &str) -> Option<usize> {
                 .flat_map(|pattern| {
                     c.match_indices(&pattern.0)
                         .map(|(index, _)| index)
-                        .filter_map(|index| Some((index, pattern.1)))
+                        .map(|index| (index, pattern.1))
                 })
                 .sorted_by(|(index_a, _), (index_b, _)| index_a.cmp(index_b))
                 .collect::<Vec<_>>();

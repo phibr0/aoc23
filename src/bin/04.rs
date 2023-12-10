@@ -91,7 +91,7 @@ pub fn part_two(input: &str) -> Option<u32> {
         .collect::<Vec<_>>();
     let mut queue = VecDeque::<&Card>::from(cards.iter().collect::<Vec<_>>());
     let mut card_count: u32 = cards.len() as u32;
-    while queue.len() > 0 {
+    while !queue.is_empty() {
         let card = queue.pop_front().unwrap();
 
         let score = card.compute_matches();
