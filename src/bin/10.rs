@@ -440,13 +440,15 @@ pub fn part_two(input: &str) -> Option<usize> {
         })
         .collect::<HashSet<(usize, usize)>>();
 
-    print_path_2(
-        &matrix,
-        &visited_set,
-        &inside_set,
-        &contained_set,
-        &outside_set,
-    );
+    if false {
+        print_path_2(
+            &matrix,
+            &visited_set,
+            &inside_set,
+            &contained_set,
+            &outside_set,
+        );
+    }
 
     contained_set.len().into()
 }
