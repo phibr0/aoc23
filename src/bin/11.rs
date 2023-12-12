@@ -5,7 +5,10 @@ advent_of_code::solution!(11);
 fn expand_empty_columns(grid: &mut Vec<Vec<char>>, replacement: char) {
     let mut empty_columns = Vec::new();
     for (i, _) in grid[0].iter().enumerate() {
-        if grid.iter().all(|row| row[i] == '.') {
+        if grid
+            .iter()
+            .all(|row| row[i] == '.' || row[i] == replacement)
+        {
             empty_columns.push(i);
         }
     }
@@ -91,15 +94,6 @@ pub fn part_one(input: &str) -> Option<usize> {
         .sum::<usize>();
 
     Some(result / 2)
-}
-
-fn print_grid(grid: &[Vec<char>]) {
-    for row in grid {
-        for ch in row {
-            print!("{}", ch);
-        }
-        println!();
-    }
 }
 
 pub fn part_two(input: &str) -> Option<usize> {

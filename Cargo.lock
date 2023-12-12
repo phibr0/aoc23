@@ -9,6 +9,7 @@ dependencies = [
  "colored",
  "itertools",
  "num",
+ "num-integer",
  "pico-args",
  "rayon",
  "regex",
