@@ -440,7 +440,7 @@ pub fn part_two(input: &str) -> Option<usize> {
         })
         .collect::<HashSet<(usize, usize)>>();
 
-    if false {
+    if true {
         print_path_2(
             &matrix,
             &visited_set,
