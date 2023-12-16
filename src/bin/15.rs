@@ -56,12 +56,11 @@ pub fn part_two(input: &str) -> Option<usize> {
                     .iter()
                     .map(|l| {
                         if l.label == key {
-                            lens.clone()
-                        } else {
-                            l.clone()
+                            return lens.clone();
                         }
+                        return l.clone();
                     })
-                    .collect::<Vec<_>>();
+                    .collect_vec();
             } else {
                 map[HolidayAsciiStringHelper::hash_from_str(key) as usize].push(lens);
             }
@@ -81,18 +80,6 @@ pub fn part_two(input: &str) -> Option<usize> {
     let mut sum = 0;
     for (i, lens_box) in map.iter().enumerate() {
         for (j, lens) in lens_box.iter().enumerate() {
-            if false {
-                println!(
-                    "{}: {} (box {}) * {} (slot {}) * {} (focal length) = {}",
-                    lens.label,
-                    (1 + i),
-                    i,
-                    (j + 1),
-                    j,
-                    lens.focal_length,
-                    (1 + i) * (1 + j) * lens.focal_length
-                );
-            }
             sum += (1 + i) * (1 + j) * lens.focal_length;
         }
     }
