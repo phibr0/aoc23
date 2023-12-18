@@ -1,9 +1,9 @@
 #[macro_use]
 extern crate lazy_static;
-use colored::*;
-use rayon::prelude::*;
+use fnv::FnvHashSet;
+use rayon::{join, prelude::*};
 use regex::Regex;
-use std::{collections::HashSet, str::FromStr};
+use std::str::FromStr;
 advent_of_code::solution!(18);
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -184,25 +184,32 @@ pub fn part_one(input: &str) -> Option<usize> {
         }
     }
 
-    let mut outside_set: HashSet<(usize, usize)> = HashSet::new();
-    for (y, row) in grid.clone().iter().enumerate() {
-        for (x, &cell) in row.iter().enumerate() {
-            if x == 0 || y == 0 || x == row.len() - 1 || y == grid.len() - 1 {
-                if cell == Cell::Ground {
-                    outside_set.insert((x, y));
+    let mut outside_set = FnvHashSet::default();
+    let mut inside_set = FnvHashSet::default();
+
+    join(
+        || {
+            for (y, row) in grid.clone().iter().enumerate() {
+                for (x, &cell) in row.iter().enumerate() {
+                    if x == 0 || y == 0 || x == row.len() - 1 || y == grid.len() - 1 {
+                        if cell == Cell::Ground {
+                            outside_set.insert((x, y));
+                        }
+                    }
                 }
             }
-        }
-    }
-
-    let mut inside_set: HashSet<(usize, usize)> = HashSet::new();
-    for (y, row) in grid.clone().iter().enumerate() {
-        for (x, &cell) in row.iter().enumerate() {
-            if cell == Cell::Ground {
-                inside_set.insert((x, y));
+        },
+        || {
+            for (y, row) in grid.clone().iter().enumerate() {
+                for (x, &cell) in row.iter().enumerate() {
+                    if cell == Cell::Ground {
+                        inside_set.insert((x, y));
+                    }
+                }
             }
-        }
-    }
+        },
+    );
+
     inside_set = inside_set.difference(&outside_set).cloned().collect();
     loop {
         let before_outside_count = outside_set.len();
@@ -243,6 +250,36 @@ pub fn part_two(input: &str) -> Option<usize> {
         .map(Task::from_str)
         .map(Result::unwrap)
         .collect();
+
+    let (perimeter_distance, corners) = join(
+        || tasks.par_iter().map(|task| task.p2_distance).sum::<usize>(),
+        || {
+            let mut corners = Vec::with_capacity(tasks.len());
+            let (mut x, mut y) = (0, 0);
+
+            tasks.iter().for_each(|task| {
+                match task.p2_direction {
+                    Direction::Right => x += task.p2_distance as isize,
+                    Direction::Left => x -= task.p2_distance as isize,
+                    Direction::Up => y += task.p2_distance as isize,
+                    Direction::Down => y -= task.p2_distance as isize,
+                }
+                corners.push((x, y));
+            });
+            corners
+        },
+    );
+
+    let mut sum: isize = 0;
+    for i in 0..corners.len() - 1 {
+        sum += corners[i].0 * corners[i + 1].1;
+        sum -= corners[i + 1].0 * corners[i].1;
+    }
+    sum += corners[corners.len() - 1].0 * corners[0].1;
+    sum -= corners[0].0 * corners[corners.len() - 1].1;
+
+    let area = (sum.abs() / 2) as usize;
+    Some(area + (perimeter_distance / 2 + 1))
 }
 
 #[cfg(test)]
@@ -258,6 +295,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, None);
+        assert_eq!(result, Some(952408144115));
     }
 }

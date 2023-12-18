@@ -12,6 +12,7 @@ enum Direction {
 }
 
 pub fn part_one(input: &str) -> Option<usize> {
+    // 2d zahlen array
     let weights = input
         .par_lines()
         .map(|line| {
@@ -20,8 +21,12 @@ pub fn part_one(input: &str) -> Option<usize> {
                 .collect::<Vec<_>>()
         })
         .collect::<Vec<_>>();
+
+    // 2d zahlen array mit selber größe wie weights, alles max wert ausser (0,0)
     let mut distance_map = vec![vec![usize::MAX; weights[0].len()]; weights.len()];
     distance_map[0][0] = 0;
+
+    // queue mit (x, y, direction, same_dir_step_count)
     let mut queue: VecDeque<(usize, usize, Option<Direction>, usize)> =
         VecDeque::from(vec![(0, 0, None, 0)]);
 
@@ -32,7 +37,7 @@ pub fn part_one(input: &str) -> Option<usize> {
 
         if x > 0
             && distance_map[y][x - 1] > distance + weight
-            && (direction != Some(Direction::Left) || same_dir_step_count < 2)
+            && (direction != Some(Direction::Left) || same_dir_step_count < 3)
         {
             distance_map[y][x - 1] = distance + weight;
             queue.push_back((
@@ -48,7 +53,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         }
         if x < weights[0].len() - 1
             && distance_map[y][x + 1] > distance + weight
-            && (direction != Some(Direction::Right) || same_dir_step_count < 2)
+            && (direction != Some(Direction::Right) || same_dir_step_count < 3)
         {
             distance_map[y][x + 1] = distance + weight;
             queue.push_back((
@@ -64,7 +69,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         }
         if y > 0
             && distance_map[y - 1][x] > distance + weight
-            && (direction != Some(Direction::Up) || same_dir_step_count < 2)
+            && (direction != Some(Direction::Up) || same_dir_step_count < 3)
         {
             distance_map[y - 1][x] = distance + weight;
             queue.push_back((
@@ -80,7 +85,7 @@ pub fn part_one(input: &str) -> Option<usize> {
         }
         if y < weights.len() - 1
             && distance_map[y + 1][x] > distance + weight
-            && (direction != Some(Direction::Down) || same_dir_step_count < 2)
+            && (direction != Some(Direction::Down) || same_dir_step_count < 3)
         {
             distance_map[y + 1][x] = distance + weight;
             queue.push_back((
